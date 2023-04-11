@@ -1,0 +1,22 @@
+#Customer data summary
+SELECT
+MIN(customer_id) AS min_customer_id,
+MAX(customer_id) AS max_customer_id,
+
+MIN(store_id) AS min_store_id,
+MAX(store_id) AS max_store_id,
+mode() WITHIN GROUP(ORDER BY store_id)
+AS mode_store_id,
+
+MIN(address_id) AS min_address_id,
+MAX(address_id) AS max_address_id,
+mode() WITHIN GROUP(ORDER BY address_id)
+AS mode_address_id,
+
+MIN(create_date) AS min_date,
+Max(create_date) AS max_date,
+
+mode() WITHIN GROUP(ORDER BY activebool)
+AS mode_active_boolean
+
+FROM customer
