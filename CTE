@@ -1,0 +1,27 @@
+# A common table expressionn to see the popularity of genres in top 5 countries
+
+WITH top_5_countries(country, total_revenue) AS (SELECT country, SUM(amount)
+FROM payment A 
+INNER JOIN customer B ON A.customer_id = B.customer_id
+INNER JOIN address C ON B.address_id = C.address_id
+INNER JOIN city D ON C.city_id = D.city_id
+INNER JOIN country E ON D.country_id - E.country_id
+GROUP BY country
+ORDER BY SUM(amount) DESC LIMIT 5),
+genre_rank(country, category_name, category_count) AS (
+SELECT country, A.name,
+COUNT (name) AS category_count
+FROM category A 
+INNER JOIN film_category B ON A.category_id = B.category_id
+INNER JOIN inventory C ON B.film_id = C.film_id 
+INNER JOIN rental D ON C.inventory_id = D.inventory_id
+INNER JOIN customer E ON D.customer_id = E.customer_id
+INNER JOIN address F ON E.address_id = F.address_id
+INNER JOIN city G ON F.city_id = G.city_id
+INNER JOIN country H IN G.country_id = H.country_id
+WHERE country IN (SELECT country FROM top_5_countries)
+GROUP BY country, name ORDER BY country ASC)
+SELECT country, category_name,
+category_count
+FROM genre_rank GROUP BY category_name, country, category_count
+ORDER BY country, category_name 
